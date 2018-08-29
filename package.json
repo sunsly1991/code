@@ -1,0 +1,14 @@
+{
+  "name": "code",
+  "version": "1.0.0",
+  "description": "一些小算法题",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "ly",
+  "license": "ISC",
+  "dependencies": {
+    "should": "^13.2.3"
+  }
+}
