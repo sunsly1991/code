@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<section id='app' class="">
+    <div>
+        <p>
+            My name is {{ firstName + ' ' + lastName }}, I am {{age}} years old.
+        </p>
+        <ul>
+            <li>{{ friends }}</li>
+        </ul>
+    </div>
+</section>
+
+<script src="./index.js"></script>
+<script>
+    const appData = {
+        firstName: 'Lucy',
+        lastName: 'Green',
+        age: 13,
+        friends: ['a', 'b', 'c']
+    }
+    bindViewToData(document.getElementById('app'), appData)
+
+    // div 里面的 p 元素的内容为
+    // My name is Lucy Green, I am 13 years old.
+    setTimeout(() => {
+        appData.firstName = 'Jerry'
+        appData.age = 16
+    }, 3000)
+    // div 里面的 p 元素的内容自动变为
+    // My name is Jerry Green, I am 16 years old.
+</script>
+</body>
+</html>

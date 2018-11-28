@@ -38,6 +38,8 @@ module.exports = {
         'generator-star-spacing': 0,
         // allow debugger during development
         'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
+        // 允许使用new Function
+        'no-new-func': 0
     },
     globals: {
         describe: true,
