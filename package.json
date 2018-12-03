@@ -1,7 +1,7 @@
 {
   "name": "code",
   "version": "1.0.0",
-  "description": "一些小算法题",
+  "description": "一些代码片段（算法题、概念理解的demo等）",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -10,5 +10,13 @@
   "license": "ISC",
   "dependencies": {
     "should": "^13.2.3"
+  },
+  "devDependencies": {
+    "cz-conventional-changelog": "^2.1.0"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
