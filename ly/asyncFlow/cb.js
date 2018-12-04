@@ -79,11 +79,14 @@ function CbFlowDone (flowCount, doneCb) {
     this.doneCb = doneCb
 }
 CbFlowDone.prototype = {
+    // 用来检查是否完成这组操作
+    // 如果已完成，执行回调
     check: function () {
         if (this.done) this.doneCb()
 
         return this
     },
+    // 一组操作中，每次完成后执行的方法
     do: function (c = 1) {
         this.doneCount += c
 
