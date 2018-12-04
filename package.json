@@ -12,7 +12,8 @@
     "should": "^13.2.3"
   },
   "devDependencies": {
-    "cz-conventional-changelog": "^2.1.0"
+    "cz-conventional-changelog": "^2.1.0",
+    "mockjs": "^1.0.1-beta3"
   },
   "config": {
     "commitizen": {
