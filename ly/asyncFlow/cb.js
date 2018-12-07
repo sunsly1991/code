@@ -82,6 +82,78 @@ const api = require('./mockServer')
     console.log(r)
 })
 
+;(function (cb) {
+    const r = {
+        // 所有学生数据
+        data: [],
+        format: function () {
+            return this.data.map((d) => {
+                return {
+                    id: d.id,
+                    name: d.name,
+                    average: d.average
+                }
+            })
+        }
+    }
+
+    api.getStudents(students => {
+        r.done = new CbFlowDone(students.length, function () {
+            cb(this.format())
+        }.bind(r))
+
+        students.forEach(s => {
+            const _s = { ...s }
+            r.data.push(_s)
+            getAverage(s.id, (average) => {
+                _s.average = average
+                r.done.do().check()
+            })
+        })
+    })
+
+    function getAverage (studentId, cb) {
+        const r = {
+            average: 0,
+            courses: [],
+            calc: function () {
+                this.average = this.courses.reduce((d, c) => {
+                    return d + c.score
+                }, 0) / this.courses.length
+
+                return this.average
+            }
+        }
+        api.getCourses(studentId, courses => {
+            r.done = new CbFlowDone(courses.length, function () {
+                // 求平均值
+                cb(this.calc())
+            }.bind(r))
+
+            courses.forEach(c => {
+                const _c = { ...c }
+                r.courses.push(_c)
+
+                getEvaluation(studentId, c.id, e => {
+                    _c.score = e.score
+
+                    r.done.do().check()
+                })
+            })
+        })
+    }
+
+    function getEvaluation (studentId, courseId, cb) {
+        api.getEvaluation(studentId, courseId, e => {
+            cb(e.score)
+        })
+    }
+})(r => {
+    // 输出结果
+    console.log('改造后')
+    console.log(r)
+})
+
 // 对一组异步操作全部完成并执行统一回调的抽象
 function CbFlowDone (flowCount, doneCb) {
     this.count = flowCount
