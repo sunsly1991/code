@@ -35,6 +35,11 @@ const getCourses = function (studentId, cb) {
         cb(d.courses)
     })
 }
+const getCoursesPromise = function (studentId) {
+    return new Promise(resolve => {
+        getCourses(studentId, resolve)
+    })
+}
 
 const getEvaluation = function (studentId, courseId, cb) {
     const d = Mock.mock({
@@ -50,10 +55,17 @@ const getEvaluation = function (studentId, courseId, cb) {
         cb(d.evaluation)
     })
 }
+const getEvaluationPromise = function (studentId, courseId) {
+    return new Promise(resolve => {
+        getEvaluation(studentId, courseId, resolve)
+    })
+}
 
 module.exports = {
     getStudents,
     getStudentsPromise,
     getCourses,
+    getCoursesPromise,
     getEvaluation,
+    getEvaluationPromise,
 }

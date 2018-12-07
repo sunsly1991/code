@@ -2,6 +2,7 @@ const api = require('./mockServer')
 
 ;(function (cb) {
     const r = {
+        // 所有学生数据
         data: [],
         format: function () {
             return this.data.map((d) => {
@@ -14,19 +15,24 @@ const api = require('./mockServer')
         }
     }
 
-    // 获取学生们
+    // 1. 获取学生列表
     api.getStudents((students) => {
+        // 绑定所有学生流程完成之后的操作
+        // students.length表示需要获取学生课程的次数
+        // 也就是所有学生还需要执行异步的次数
         r.done = new CbFlowDone(students.length, function () {
+            // 5. 每个学生成绩平均值计算完成后，执行最终回调，回传结果
             console.log('all students done')
             cb(this.format())
         }.bind(r))
 
         students.forEach(s => {
-            // 构建每个学生的数据、方法
+            // 每个学生的数据、方法
             const _s = {
                 id: s.id,
                 name: s.name,
                 average: 0,
+                courses: [],
                 // 计算平均分
                 calc: function () {
                     this.average = this.courses.reduce((d, c) => {
@@ -34,21 +40,25 @@ const api = require('./mockServer')
                     }, 0) / this.courses.length
                 }
             }
+            // 按顺序压入每个学生数据
+            // 并利用闭包、应用类型变量更新数据
             r.data.push(_s)
 
-            // 通过学生id获取上的课程们
+            // 2. 根据每个学生的id，获取该学生的课程列表
             api.getCourses(s.id, (courses) => {
                 // 绑定每个学生流程完成之后的操作
+                // courses.length表示还需要获取成绩的次数
+                // 也就是当前学生还需要执行的异步操作的次数
                 _s.done = new CbFlowDone(courses.length, function () {
-                    // 计算平均分
+                    // 4. 取得学生的每门课成绩后，计算平均值
                     this.calc()
                     console.log(`student ${s.id}:${s.name} done`)
                     console.log(this.courses)
                     console.log(this.average)
 
+                    // 每个学生的异步完成后，检查所有学生异步是否全部完成
                     r.done.do().check()
                 }.bind(_s))
-                _s.courses = []
                 courses.forEach((c) => {
                     const _c = {
                         id: c.id,
@@ -56,10 +66,11 @@ const api = require('./mockServer')
                     }
                     _s.courses.push(_c)
 
-                    // 通过学生id、课程id获取成绩
+                    // 3. 根据学生id，和每个课程id，获取成绩
                     api.getEvaluation(s.id, c.id, (e) => {
                         _c.score = e.score
 
+                        // 每次成绩获取完成后，检查该学生是否获取完全部成绩
                         _s.done.do().check()
                     })
                 })
