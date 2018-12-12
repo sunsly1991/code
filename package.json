@@ -9,6 +9,7 @@
   "author": "ly",
   "license": "ISC",
   "dependencies": {
+    "rxjs": "^6.3.3",
     "should": "^13.2.3"
   },
   "devDependencies": {
